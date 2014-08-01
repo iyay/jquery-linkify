@@ -3,20 +3,25 @@ function linkify(string, buildHashtagUrl, includeW3, target, noFollow) {
   if (noFollow) {
     relNoFollow = " rel=\"nofollow\"";
   }
-  
+
   string = string.replace(/((http|https|ftp)\:\/\/|\bw{3}\.)[a-z0-9\-\.]+\.[a-z]{2,3}(:[a-z0-9]*)?\/?([a-z\u00C0-\u017F0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*/gi, function(captured) {
     var uri;
-    if (captured.toLowerCase().indexOf("www.") == 0) {
-      if (!includeW3) {
-        return captured;
+    if (captured.match(/jpg|jpeg|gif|png/)) {
+      return "<a href=\"" + captured+ "\" data-whitebox class='image'><img src=\"" + captured + "\" width='200'/></a>";
+    } else{
+      if (captured.toLowerCase().indexOf("www.") == 0) {
+        if (!includeW3) {
+          return captured;
+        }
+        uri = "http://" + captured;
+      } else {
+        uri = captured;
       }
-      uri = "http://" + captured;
-    } else {
-      uri = captured;
-    }
-    return "<a href=\"" + uri+ "\" target=\"" + target + "\"" + relNoFollow + ">" + captured + "</a>";
+      return "<a href=\"" + uri+ "\" target=\"" + target + "\"" + relNoFollow + ">" + captured + "</a>";
+    };
+
   });
-  
+
   if (buildHashtagUrl) {
     string = string.replace(/\B#(\w+)/g, "<a href=" + buildHashtagUrl("$1") +" target=\"" + target + "\"" + relNoFollow + ">#$1</a>");
   }
