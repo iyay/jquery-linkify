@@ -4,21 +4,30 @@ function linkify(string, buildHashtagUrl, includeW3, target, noFollow) {
     relNoFollow = " rel=\"nofollow\"";
   }
 
-  string = string.replace(/((http|https|ftp)\:\/\/|\bw{3}\.)[a-z0-9\-\.]+\.[a-z]{2,3}(:[a-z0-9]*)?\/?([a-z\u00C0-\u017F0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*/gi, function(captured) {
+  var regex = /(\b(?:(https?|ftp):\/\/)?((?:www\d{0,3}\.)?([a-z0-9.-]+\.(?:[a-z]{2,4})(?:\/[^\/\s]+)*))\b)/g;
+  var checkImg = false;
+
+  if (string.split(' ').length == 1) {
+    checkImg = true;
+  }
+
+  string = string.replace(regex, function(captured) {
     var uri;
-    if (captured.match(/jpg|jpeg|gif|png/)) {
-      return "<a href=\"" + captured+ "\" data-whitebox class='image'><img src=\"" + captured + "\" width='200'/></a>";
-    } else{
-      if (captured.toLowerCase().indexOf("www.") == 0) {
-        if (!includeW3) {
-          return captured;
-        }
-        uri = "http://" + captured;
-      } else {
-        uri = captured;
+    if (checkImg) {
+      if (captured.match(/.jpg|.jpeg|.gif|.png/i)) {
+        return "<a href=\"" + captured+ "\" data-whitebox=\"" + Math.random().toString(36).slice(2) + "\" class='image'><img src=\"" + captured + "\" width='200'/></a>";
       }
-      return "<a href=\"" + uri+ "\" target=\"" + target + "\"" + relNoFollow + ">" + captured + "</a>";
-    };
+    }
+    if (captured.toLowerCase().indexOf("www.") == 0) {
+      if (!includeW3) {
+        return captured;
+      }
+      uri = "http://" + captured;
+    } else {
+      uri = captured;
+    }
+
+    return "<a href=\"" + uri+ "\" target=\"" + target + "\"" + relNoFollow + ">" + captured + "</a>";
 
   });
 
