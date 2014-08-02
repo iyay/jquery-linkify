@@ -15,7 +15,7 @@ function linkify(string, buildHashtagUrl, includeW3, target, noFollow) {
     var uri;
     if (checkImg) {
       if (captured.match(/.jpg|.jpeg|.gif|.png/i)) {
-        return "<a href=\"" + captured+ "\" data-whitebox=\"" + Math.random().toString(36).slice(2) + "\" class='image'><img src=\"" + captured + "\" width='200'/></a>";
+        return "<a href=\"" + captured+ "\" data-whitebox=\"" + Math.random().toString(36).slice(2) + "\" class='image auto-image hidden'><span class='spinner'></span><img src=\"" + captured + "\" width='200'/></a>";
       }
     }
     if (captured.toLowerCase().indexOf("www.") == 0) {
